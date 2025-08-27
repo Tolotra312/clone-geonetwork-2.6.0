@@ -1,0 +1,15 @@
+<!-- <p>most-downloaded works!</p> -->
+
+<div class="grid grid-cols-2 gap-4 p-6">
+    
+    <div *ngFor="let record of records$ | async" class="border rounded-lg p-12" (click)="onMapClick(record)">
+        <img 
+            *ngIf="record" 
+            [src]="record.overviews?.[0]?.url"
+            class="w-full h-[185px] object-contain"
+            alt="Metadata Image" 
+            [title]="record.title"
+        />
+    </div>
+    
+</div>

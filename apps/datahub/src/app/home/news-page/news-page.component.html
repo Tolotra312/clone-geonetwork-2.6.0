@@ -1,0 +1,98 @@
+<!-- <div class="relative" gnUiSearchStateContainer="newsfeed">
+  <div class="backdrop bg-gray-50"></div>
+  <div
+    class="relative pt-[44px] container-lg flex flex-col-reverse sm:flex-row px-auto -mx-5 sm:px-0 sm:mx-auto"
+  >
+    <div class="pr-0 lg:pr-[61px] overflow-hidden grow mt-11 sm:mt-0">
+      <h2
+        class="text-2xl font-title text-primary leading-7 text-left mb-5 sm:mb-8 pl-5 sm:pl-0"
+        translate
+      >
+        datahub.news.feed
+      </h2>
+      <datahub-last-created></datahub-last-created>
+    </div>
+    <div class="w-full sm:w-[var(--right-col-width)] shrink-0 px-5 mb-14">
+      <h2
+        class="text-2xl font-title text-primary leading-7 text-left mb-5 sm:mb-8"
+        translate
+      >
+        datahub.news.figures
+      </h2>
+      <p> tesssssssssssssssssst</p>
+      <datahub-most-recent></datahub-most-recent>
+      <datahub-key-figures></datahub-key-figures>
+      <div
+        *ngIf="!!getContactMail()"
+        class="py-[37px] px-6 rounded-lg bg-white border mt-5 card-shadow flex flex-col gap-3 border-secondary"
+      >
+        <h2
+          class="text-2xl font-title text-primary leading-7 text-left"
+          translate
+        >
+          datahub.news.contact.title
+        </h2>
+        <div
+          class="flex flex-col gap-3"
+          [innerHtml]="'datahub.news.contact.html' | translate"
+        ></div>
+        <a
+          [href]="'mailto:' + getContactMail()"
+          class="gn-ui-btn-secondary uppercase justify-center"
+          translate
+        >
+          datahub.news.contact.contactus
+        </a>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div class="relative" gnUiSearchStateContainer="newsfeed">
+  <div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 min-h-0">
+      
+      
+      <div class="bg-white rounded-lg border border-gray-200 shadow h-full">
+        <h3 
+          class="text-xl font-title text-white bg-[#234E91] leading-7 p-3 mb-3 text-center w-full cursor-pointer hover:bg-[#1C3E75] transition"
+          (click)="onMostRecentClick()"
+        >
+          Les plus récentes
+        </h3>
+        <div gnUiSearchStateContainer="most-recent">
+          <datahub-most-recent></datahub-most-recent>
+          <!-- <gn-ui-most-recent></gn-ui-most-recent> -->
+        </div>
+      </div>
+
+    
+      <div class="bg-white rounded-lg border border-gray-200 shadow h-full">
+        <h3 
+          class="text-xl font-title text-white bg-[#234E91] leading-7 p-3 mb-3 text-center w-full cursor-pointer hover:bg-[#1C3E75] transition"
+          (click)="onMapsClick()"
+        >
+          Cartes à la une
+        </h3>
+        <div gnUiSearchStateContainer="last-created">
+          <datahub-last-created></datahub-last-created>
+        </div>
+      </div>
+
+     
+      <div class="bg-white rounded-lg border border-gray-200 shadow h-full">
+        <h3 
+          class="text-xl font-title text-white bg-[#234E91] leading-7 p-3 mb-3 text-center w-full cursor-pointer hover:bg-[#1C3E75] transition"
+          (click)="onMostDownloadedClick()"
+        >
+          Les plus téléchargées
+        </h3>
+        <div gnUiSearchStateContainer="most-downloaded">
+          <!-- <datahub-key-figures></datahub-key-figures> -->
+          <datahub-most-downloaded></datahub-most-downloaded>
+        </div>   
+      </div>
+    </div>
+  </div>
+</div>

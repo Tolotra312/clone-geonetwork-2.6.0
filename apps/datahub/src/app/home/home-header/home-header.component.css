@@ -1,0 +1,28 @@
+::ng-deep .mdc-menu-surface.mat-mdc-autocomplete-panel {
+  margin-top: 10px !important;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow:
+    0 2px 4px -1px #0003,
+    0 4px 5px #00000024,
+    0 1px 10px #0000001f;
+}
+
+.bg-menu {
+  background-color: #ebebeb;
+}
+
+.container-title {
+  background-image: url('/assets/img/logo_header.webp');
+  min-height: 130px;
+  padding-left: 130px;
+  line-height: 130px;
+  background-repeat: no-repeat;
+  background-position: center left;
+}
+
+.container-title .font-title {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}

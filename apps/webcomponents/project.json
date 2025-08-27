@@ -1,0 +1,135 @@
+{
+  "name": "webcomponents",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/webcomponents/src",
+  "prefix": "wc",
+  "tags": ["type:app"],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/webcomponents",
+        "index": "apps/webcomponents/src/index.html",
+        "main": "apps/webcomponents/src/main.ts",
+        "polyfills": "apps/webcomponents/src/polyfills.ts",
+        "tsConfig": "apps/webcomponents/tsconfig.app.json",
+        "assets": [],
+        "styles": [
+          "tailwind.base.css",
+          "apps/webcomponents/src/styles.css",
+          "node_modules/tippy.js/dist/tippy.css",
+          "node_modules/ol/ol.css"
+        ],
+        "scripts": [],
+        "allowedCommonJsDependencies": [
+          "duration-relativetimeformat",
+          "papaparse",
+          "xlsx",
+          "chroma-js",
+          "@rgrove/parse-xml",
+          "messageformat",
+          "rbush"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "10mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "256kb",
+              "maximumError": "1mb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        },
+        "webcomponents": {
+          "outputHashing": "none"
+        },
+        "standaloneSearch": {
+          "outputHashing": "none",
+          "main": "apps/webcomponents/src/standalone-search.ts"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "webcomponents:build:production"
+        },
+        "development": {
+          "buildTarget": "webcomponents:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "webcomponents:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/webcomponents/src/**/*.ts",
+          "apps/webcomponents/src/**/*.html"
+        ]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/webcomponents"],
+      "options": {
+        "jestConfig": "apps/webcomponents/jest.config.ts"
+      }
+    },
+    "storybook": {
+      "executor": "@storybook/angular:start-storybook",
+      "options": {
+        "port": 4400,
+        "configDir": "apps/webcomponents/.storybook",
+        "browserTarget": "webcomponents:build",
+        "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular:build-storybook",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputDir": "dist/storybook/webcomponents",
+        "configDir": "apps/webcomponents/.storybook",
+        "browserTarget": "webcomponents:build",
+        "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    }
+  }
+}

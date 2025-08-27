@@ -1,0 +1,12 @@
+<div class="container-lg mx-auto mt-8">
+  <datahub-search-filters
+    [isQualitySortable]="metadataQualityDisplay"
+  ></datahub-search-filters>
+  <div class="mt-6">
+    <gn-ui-results-list-container
+    (mdSelect)="onMetadataSelection($event)"
+    showMore="button"
+  ></gn-ui-results-list-container>
+  </div>
+  
+</div>

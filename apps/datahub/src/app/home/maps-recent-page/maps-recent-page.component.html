@@ -1,0 +1,29 @@
+<!-- <p>maps-recent-page works!</p> -->
+<!-- <div class="grid grid-cols-2 gap-4 mt-3">
+    
+    <div *ngFor="let record of records$ | async" 
+        (click)="onMapClick(record)"
+        class="border rounded-lg p-12">
+        <img 
+            *ngIf="record" 
+            [src]="record.overviews?.[0]?.url"
+            class="w-full h-[185px] object-contain"
+            alt="Metadata Image" 
+            [title]="record.title"
+        />
+    </div>
+
+</div> -->
+
+<div class="container-lg mx-auto mt-8">
+    <datahub-search-filters
+      [isQualitySortable]="metadataQualityDisplay"
+    ></datahub-search-filters>
+    <div class="mt-6">
+      <gn-ui-results-list-container
+      (mdSelect)="onMetadataSelection($event)"
+      showMore="button"
+    ></gn-ui-results-list-container>
+    </div>
+    
+  </div>

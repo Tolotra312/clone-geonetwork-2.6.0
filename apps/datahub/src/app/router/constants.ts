@@ -1,0 +1,6 @@
+export const ROUTER_ROUTE_HOME = 'home'
+export const ROUTER_ROUTE_NEWS = 'news'
+export const ROUTER_ROUTE_ORGANIZATIONS = 'organisations'
+export const ROUTER_ROUTE_MAPS = 'maps'
+export const ROUTER_ROUTE_MAPS_RECENT = 'maps-recent'
+export const ROUTER_ROUTE_MAPS_DOWNLOADED = 'maps-downloaded'

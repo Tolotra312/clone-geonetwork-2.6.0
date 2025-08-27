@@ -1,0 +1,20 @@
+ul {
+    padding:5px;
+    min-height: 30px;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  
+  ul li {
+    list-style-type: none;
+    float: left;
+    color: #837f7f;
+    font-size: 12px;
+  }
+  
+  ul li a {
+    padding: 0px 12px;
+  }
+  
+  ul li:last-child {
+    float: initial;
+  }
