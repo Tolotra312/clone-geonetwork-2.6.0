@@ -100,22 +100,9 @@ export class EditPageComponent implements OnInit, OnDestroy {
       this.route.snapshot.data['record']
 
     this.facade.openRecord(currentRecord, currentRecordSource)
-    console.log('EditPageComponent initialized with record:', currentRecord);
-    // console.log('EditPageComponent initialized with record source:', currentRecordSource);
-    console.log('EditPageComponent initialized with route data:', this.route.snapshot.data);
-    console.log('EditPageComponent initialized with route routeConfig:', this.route.snapshot.routeConfig);
     
     this.subscription.add(
-      this.facade.editorConfig$.subscribe(config => {
-        console.log('Champs définis dans editorConfig$ : ', config);
-        // console.table(config.fields.map(f => f.name)); // liste tous les noms de champs
-      })
-    );
-
-    this.subscription.add(
       this.facade.record$.pipe(take(1)).subscribe((record) => {
-        console.log('EditPageComponent record:', record);
-        
         if (!record.uniqueIdentifier) {
           this.newRecord = true
           this.facade.saveRecord()
@@ -125,30 +112,7 @@ export class EditPageComponent implements OnInit, OnDestroy {
       })
     )
 
-    // if (this.route.snapshot.routeConfig?.path.includes('create')) {
-    //   this.facade.record$.pipe(take(1)).subscribe((record) => {
-    //     // console.log('Record mis à jour :', record);
-    //     if (record === null){
-    //       this.facade.openRecord(
-    //         currentRecord,
-    //         currentRecordSource
-    //       )
-    //     }else{
-    //       this.facade.openRecord(
-    //         record, 
-    //         null
-    //       );
-    //     }
-        
-    //   });
-    // }else{
-    //   // const [currentRecord, currentRecordSource, currentRecordAlreadySaved] = this.route.snapshot.data['record'] 
-    //   this.facade.openRecord(
-    //       currentRecord,
-    //       currentRecordSource
-    //   )
-    // }
-
+    
     this.subscription.add(
       this.facade.saveError$.subscribe((error) => {
         if (error instanceof PublicationVersionError) {
@@ -281,69 +245,49 @@ export class EditPageComponent implements OnInit, OnDestroy {
   }
 
   fetchRedmineData() {
-    // this.redmineService.loginToGeoNetwork();
-    console.log('Fetching Redmine data for card number:', this.cardNumber);
     
     if (!this.cardNumber) return;
 
     this.redmineService.getIssueByCardNumber(this.cardNumber).subscribe((data: any) => {
-      console.log('Redmine data fetched:', data);
-      
       if (data.issues && data.issues.length > 0) {
-        console.log('DATA ISSUEEEE: ',data.issues);
         const issue = data.issues[0];
-        // console.log('First issue:', issue.subject);
         const keywordsField = issue.custom_fields.find(cf => cf.name === 'Mots clés')?.value;
-        console.log('Mots clés:', keywordsField);
-        console.log('statut: ',issue.status);
-        console.log("statut name: ",issue.status.name);
-        
-        
-        
-        // console.log('language: ',this.translateService.getDefaultLang());
-        
-        // console.log('lang: ',this.translateService.currentLang);
-        
-        const keywordsValue = keywordsField ?  keywordsField : '';
-        // const keywords: Keyword[] = [
-        //   {
-        //     thesaurus: { id: 'geonetwork.thesaurus.local' },
-        //     type: 'other',
-        //     label: keywordsValue,
-        //   },
-        //   {
-        //     thesaurus: { id: 'geonetwork.thesaurus.local' },
-        //     type: 'other',
-        //     label: 'test',
-        //   },
-        //   {
-        //     thesaurus: { id: 'geonetwork.thesaurus.local' },
-        //     type: 'other',
-        //     label: '_another_keyword_',
-        //   },
-        // ];
+        const themeHdfField = issue.custom_fields.find(cf => cf.name === 'Thématique HdF')?.value;
+        const collectionField = issue.custom_fields.find(cf => cf.name === 'Collection')?.value;
+        const alimentationField = issue.custom_fields.find(cf => cf.name === 'Alimentation Cartothèque')?.value;
+        const echelleField = issue.custom_fields.find(cf => cf.name === 'Echelle')?.value;
 
-        const keywords: Keyword[] = keywordsField
-          .split(',')
-          .map((kw: string) => kw.trim())
-          .filter((kw: string) => kw.length > 0)
-          .map((kw: string): Keyword => ({
-            thesaurus: { id: 'geonetwork.thesaurus.local' },
-            type: 'other',
-            label: kw,
-          }));
+        const keywords: Keyword[] = [
+          ...keywordsField
+            .split(',')
+            .map((kw: string) => kw.trim())
+            .filter((kw: string) => kw.length > 0)
+            .map((kw: string): Keyword => ({
+              thesaurus: { id: 'Mots-clés' },
+              type: 'other',
+              label: kw,
+            })),
+        
+          ...(themeHdfField
+            ? [{
+                thesaurus: { id: 'Thématiques SIG' },
+                type: 'theme',
+                label: themeHdfField
+              }]
+            : []),
+
+        ];
 
         
         this.facade.record$.pipe(take(1)).subscribe(oldRecord => {
-          // Création d’un nouveau record complet avec les données Redmine
           const updatedRecord: CatalogRecord = {
             ...oldRecord,
             title: issue.subject, 
             abstract: issue.description || 'Description par défaut', 
             overviews: [], 
-            keywords: keywords, // type `Keyword[]`
+            keywords: keywords, 
             kind: 'dataset',
-            resourceIdentifier: `redmine-issue-${issue.id}`,
+            resourceIdentifier: this.cardNumber,
             resourceCreated: issue.created_on,
             resourceUpdated: issue.updated_on,
             recordUpdated: issue.updated_on,
@@ -368,43 +312,11 @@ export class EditPageComponent implements OnInit, OnDestroy {
             onlineResources: [],
           };
   
-          //  Réouverture complète du record avec les nouvelles données
           this.facade.openRecord(updatedRecord, null);
-  
-          // On remet la page sur la première
           this.facade.setCurrentPage(0);
         });
         
-        // // this.facade.updateRecordField('abstract', issue.description || '');
-        // // this.facade.updateRecordField('title', issue.subject);
-        // this.facade.updateRecordField('title', { fre: issue.subject, eng: 'Translation of subject here', });
-        // this.facade.setFieldVisibility({ model: 'title' }, true);
-
-        // this.facade.updateRecordField('abstract', 'dataset blalbala');
-        // this.facade.updateRecordField('overviews', 'overviews blalbala');
-
-        // this.facade.updateRecordField('keywords', keywords);
-
-        // this.facade.updateRecordField('kind', 'dataset');
-      
-        // // this.facade.updateRecordField('uniqueIdentifier', `redmine-issue-${issue.id}`);
-        // this.facade.updateRecordField('resourceIdentifier', `redmine-issue-${issue.id}`);
-        // this.facade.updateRecordField('resourceCreated', issue.created_on);
-        // this.facade.updateRecordField('resourceUpdated', issue.updated_on);
-        // this.facade.updateRecordField('recordUpdated', issue.updated_on);
-
-        // this.facade.updateRecordField('licenses','Licence Ouverte (Etalab)');
-
-        // this.facade.prefillRecordData(issue);
-
-        // // this.facade.record$.pipe(take(1)).subscribe(record => {
-        // //   this.facade.openRecord(record, null);
-        // // });
-        // // const transformedIssue = this.mapIssueToDatasetRecord(data.issue);
-        // // this.editorFacade.prefillRecordData(transformedIssue);
-        // // console.log('Données assignées à prefillRecordData');
-        // // this.router.navigate(['/create']).catch((err) => console.error(err));
-        // this.facade.setCurrentPage(0);
+       
       }
       else {
         alert('Aucune donnée trouvée pour ce numéro de carte.');
@@ -414,6 +326,5 @@ export class EditPageComponent implements OnInit, OnDestroy {
     
   }
 
-  
 
 }

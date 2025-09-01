@@ -9,7 +9,8 @@ export class RedmineService {
   // private apiUrl = 'https://redmine.hautsdefrance.fr/issues/7085.json';
   private apiUrl = '/redmine-api/issues/7084.json';
   // private apiUrl = '/redmine-api/issues/';
-  private apiUrlByCardNumber = '/redmine-api/issues.json?cf_1=';
+  // private apiUrlByCardNumber = '/redmine-api/issues.json?cf_1=';
+  private apiUrlByCardNumber = '/redmine-api/issues.json?status_id=7&cf_1=';
   private username = environment.redmineUsername;
   private password = environment.redminePassword;
 

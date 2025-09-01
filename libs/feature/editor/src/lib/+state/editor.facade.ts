@@ -38,11 +38,7 @@ export class EditorFacade {
   isPublished$ = this.store.pipe(select(EditorSelectors.selectIsPublished))
   canEditRecord$ = this.store.pipe(select(EditorSelectors.selectCanEditRecord))
 
-  openRecord(record: CatalogRecord, recordSource: string) {
-    console.log('Opening record', record);
-    console.log('Record source', recordSource);
-    
-    
+  openRecord(record: CatalogRecord, recordSource: string) {    
     this.store.dispatch(
       EditorActions.openRecord({
         record,
