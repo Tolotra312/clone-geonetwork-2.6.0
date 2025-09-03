@@ -276,6 +276,30 @@ export class EditPageComponent implements OnInit, OnDestroy {
               }]
             : []),
 
+          ...(collectionField
+            ? [{
+                thesaurus: { id: 'Collections' },
+                type: 'theme',
+                label: collectionField
+              }]
+            : []),
+
+          ...(alimentationField
+            ? [{
+                thesaurus: { id: 'Alimentation' },
+                type: 'theme',
+                label: alimentationField
+              }]
+            : []),
+
+          ...(echelleField
+            ? [{
+                thesaurus: { id: 'Echelle' },
+                type: 'theme',
+                label: echelleField
+              }]
+            : []),
+
         ];
 
         

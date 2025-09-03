@@ -10,20 +10,13 @@ export class RedmineService {
   private apiUrl = '/redmine-api/issues/7084.json';
   // private apiUrl = '/redmine-api/issues/';
   // private apiUrlByCardNumber = '/redmine-api/issues.json?cf_1=';
-  private apiUrlByCardNumber = '/redmine-api/issues.json?status_id=7&cf_1=';
+  private apiUrlByCardNumber = '/redmine-api/issues.json?status_id=7&cf_17=Oui-Externe|Oui-Interne&cf_1=';
   private username = environment.redmineUsername;
   private password = environment.redminePassword;
 
   constructor(private http: HttpClient) {}
 
   getIssueData() {
-    // const encodedCredentials = Buffer.from(`${this.username}:${this.password}`).toString('base64');
-
-    // const headers = new HttpHeaders({
-    //     'Authorization': `Basic ${encodedCredentials}`,
-    //     'Content-Type': 'application/json',
-    // });
-
     const headers = new HttpHeaders({
         'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`),
         'Content-Type': 'application/json',
@@ -37,30 +30,10 @@ export class RedmineService {
       'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`),
       'Content-Type': 'application/json',
     });
-    // const apiUrl = `https://redmine.hautsdefrance.fr/issues.json?cf_1=${this.cardNumber}`;
+    
     return this.http.get(`${this.apiUrlByCardNumber}${cardNumber}`, { headers });
   }
 
-  loginToGeoNetwork() {
-    const params = new HttpParams()
-      .set('username', 'metourneau')
-      .set('password', 'oBlV@I2b#0E$5l');
-  
-    this.http.post('/geonetwork/srv/eng/xml.user.login', params, {
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      responseType: 'text', // GeoNetwork renvoie du XML
-    }).subscribe({
-      next: (response) => {
-        console.log('✅ Connexion GeoNetwork réussie');
-      },
-      error: (error) => {
-        console.error('❌ Erreur de login GeoNetwork', error);
-      }
-    });
-  }
   
 
 }
