@@ -81,6 +81,7 @@ export class DcatApConverter extends BaseConverter<string> {
     spatialRepresentation: () => undefined,
     extras: () => undefined,
     translations: () => undefined,
+    resolutionScaleDenominator: () => undefined,
   }
 
   protected writers: Record<
@@ -122,6 +123,7 @@ export class DcatApConverter extends BaseConverter<string> {
     defaultLanguage: () => undefined,
     otherLanguages: () => undefined,
     translations: () => undefined,
+    resolutionScaleDenominator: () => undefined,
   }
 
   constructor(
@@ -282,6 +284,9 @@ export class DcatApConverter extends BaseConverter<string> {
       tr,
       defaultLanguage
     )
+    const resolutionScaleDenominator = this.readers[
+      'resolutionScaleDenominator'
+    ](dataStore, catalogRecord, tr, defaultLanguage)
 
     if (kind === 'dataset') {
       const status = this.readers['status'](
@@ -359,6 +364,7 @@ export class DcatApConverter extends BaseConverter<string> {
         updateFrequency,
         ...(landingPage && { landingPage }),
         translations: tr,
+        resolutionScaleDenominator,
       } as DatasetRecord
     } else {
       const onlineResources = this.readers['onlineResources'](
@@ -393,6 +399,7 @@ export class DcatApConverter extends BaseConverter<string> {
         onlineResources,
         ...(landingPage && { landingPage }),
         translations: tr,
+        resolutionScaleDenominator,
       } as ServiceRecord
     }
   }
@@ -486,6 +493,8 @@ export class DcatApConverter extends BaseConverter<string> {
       this.writers['otherConstraints'](record, dataStore, recordNode)
     fieldChanged('onlineResources') &&
       this.writers['onlineResources'](record, dataStore, recordNode)
+    fieldChanged('resolutionScaleDenominator') &&
+      this.writers['resolutionScaleDenominator'](record, dataStore, recordNode)
 
     if (record.kind === 'dataset') {
       fieldChanged('status') &&

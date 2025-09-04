@@ -92,6 +92,12 @@ export function writeCharacterString(
   )
 }
 
+export function writeInteger(
+  text: string
+): ChainableFunction<XmlElement, XmlElement> {
+  return tap(pipe(findChildOrCreate('gco:Integer'), setTextContent(text)))
+}
+
 export function writeLocalizedCharacterString(
   text: string,
   translations: FieldTranslation,
@@ -1508,5 +1514,22 @@ export function writeResourceIdentifier(
           writeCharacterString(record.resourceIdentifier)
         )
       : noop
+  )(rootEl)
+}
+
+export function writeResolutionScaleDenominator(
+  record: DatasetRecord,
+  rootEl: XmlElement
+) {
+  pipe(
+    findOrCreateIdentification(),
+    findNestedChildOrCreate(
+      'gmd:spatialResolution',
+      'gmd:MD_Resolution',
+      'gmd:equivalentScale',
+      'gmd:MD_RepresentativeFraction',
+      'gmd:denominator'
+    ),
+    writeInteger(record.resolutionScaleDenominator)
   )(rootEl)
 }

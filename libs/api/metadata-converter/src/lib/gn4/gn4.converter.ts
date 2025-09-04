@@ -40,6 +40,7 @@ export class Gn4Converter extends BaseConverter<Gn4Record> {
       overviews: [],
       defaultLanguage: null,
       otherLanguages: [],
+      resolutionScaleDenominator: '',
     }
     const record: CatalogRecord = Object.keys(allKeys).reduce(
       (prev, fieldName) =>

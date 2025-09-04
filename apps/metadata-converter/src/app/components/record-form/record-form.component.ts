@@ -101,6 +101,7 @@ export class RecordFormComponent implements AfterViewInit {
       otherLanguages: [],
       defaultLanguage: 'en',
       overviews: [],
+      resolutionScaleDenominator: '',
     }
     if (kind === 'dataset') {
       this.record = {

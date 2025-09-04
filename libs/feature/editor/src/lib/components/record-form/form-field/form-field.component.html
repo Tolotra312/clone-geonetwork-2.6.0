@@ -163,6 +163,15 @@
         (valueChange)="valueChange.emit($event)"
       ></gn-ui-form-field-online-link-resources>
     </ng-container>
+
+    <ng-container *ngSwitchCase="'resolutionScaleDenominator'">
+      <gn-ui-form-field-simple
+        [type]="'text'"
+        [value]="valueAsString"
+        (valueChange)="valueChange.emit($event)"
+      ></gn-ui-form-field-simple>
+    </ng-container>
+
   </ng-container>
 
   <ng-container *ngIf="!model">

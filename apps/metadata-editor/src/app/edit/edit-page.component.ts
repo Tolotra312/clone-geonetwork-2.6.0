@@ -36,8 +36,11 @@ import { PageErrorComponent } from './components/page-error/page-error.component
 import { DateService } from '@geonetwork-ui/util/shared'
 import { log } from 'util'
 import { RedmineService } from '../redmine.service'
-import { FormsModule } from '@angular/forms';
-import { CatalogRecord, Keyword } from '@geonetwork-ui/common/domain/model/record'
+import { FormsModule } from '@angular/forms'
+import {
+  CatalogRecord,
+  Keyword,
+} from '@geonetwork-ui/common/domain/model/record'
 
 marker('editor.record.form.bottomButtons.comeBackLater')
 marker('editor.record.form.bottomButtons.previous')
@@ -92,7 +95,7 @@ export class EditPageComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private router: Router,
     private dateService: DateService,
-    private redmineService: RedmineService,
+    private redmineService: RedmineService
   ) {}
 
   ngOnInit(): void {
@@ -100,7 +103,7 @@ export class EditPageComponent implements OnInit, OnDestroy {
       this.route.snapshot.data['record']
 
     this.facade.openRecord(currentRecord, currentRecordSource)
-    
+
     this.subscription.add(
       this.facade.record$.pipe(take(1)).subscribe((record) => {
         if (!record.uniqueIdentifier) {
@@ -112,7 +115,6 @@ export class EditPageComponent implements OnInit, OnDestroy {
       })
     )
 
-    
     this.subscription.add(
       this.facade.saveError$.subscribe((error) => {
         if (error instanceof PublicationVersionError) {
@@ -245,86 +247,104 @@ export class EditPageComponent implements OnInit, OnDestroy {
   }
 
   fetchRedmineData() {
-    
-    if (!this.cardNumber) return;
+    if (!this.cardNumber) return
 
-    this.redmineService.getIssueByCardNumber(this.cardNumber).subscribe((data: any) => {
-      if (data.issues && data.issues.length > 0) {
-        const issue = data.issues[0];
-        const keywordsField = issue.custom_fields.find(cf => cf.name === 'Mots clés')?.value;
-        const themeHdfField = issue.custom_fields.find(cf => cf.name === 'Thématique HdF')?.value;
-        const collectionField = issue.custom_fields.find(cf => cf.name === 'Collection')?.value;
-        const alimentationField = issue.custom_fields.find(cf => cf.name === 'Alimentation Cartothèque')?.value;
-        const echelleField = issue.custom_fields.find(cf => cf.name === 'Echelle')?.value;
+    this.redmineService
+      .getIssueByCardNumber(this.cardNumber)
+      .subscribe((data: any) => {
+        if (data.issues && data.issues.length > 0) {
+          const issue = data.issues[0]
+          const keywordsField = issue.custom_fields.find(
+            (cf) => cf.name === 'Mots clés'
+          )?.value
+          const themeHdfField = issue.custom_fields.find(
+            (cf) => cf.name === 'Thématique HdF'
+          )?.value
+          const collectionField = issue.custom_fields.find(
+            (cf) => cf.name === 'Collection'
+          )?.value
+          const alimentationField = issue.custom_fields.find(
+            (cf) => cf.name === 'Alimentation Cartothèque'
+          )?.value
+          const resolutionScaleDenominatorField = issue.custom_fields.find(
+            (cf) => cf.name === 'Echelle'
+          )?.value
 
-        const keywords: Keyword[] = [
-          ...keywordsField
-            .split(',')
-            .map((kw: string) => kw.trim())
-            .filter((kw: string) => kw.length > 0)
-            .map((kw: string): Keyword => ({
-              thesaurus: { id: 'Mots-clés' },
-              type: 'other',
-              label: kw,
-            })),
-        
-          ...(themeHdfField
-            ? [{
-                thesaurus: { id: 'Thématiques SIG' },
-                type: 'theme',
-                label: themeHdfField
-              }]
-            : []),
+          const keywords: Keyword[] = [
+            ...keywordsField
+              .split(',')
+              .map((kw: string) => kw.trim())
+              .filter((kw: string) => kw.length > 0)
+              .map(
+                (kw: string): Keyword => ({
+                  thesaurus: { id: 'Mots-clés' },
+                  type: 'other',
+                  label: kw,
+                })
+              ),
 
-        ];
+            ...(themeHdfField
+              ? [
+                  {
+                    thesaurus: { id: 'Thématiques région' },
+                    type: 'external.theme.thematiques_region_hdf',
+                    label: themeHdfField,
+                  },
+                ]
+              : []),
+          ]
+          const echelle = resolutionScaleDenominatorField
+            ? parseInt(
+                (
+                  resolutionScaleDenominatorField.match(
+                    /1\s*:\s*([\d\s]+)/
+                  )?.[1] || ''
+                ).replace(/\s+/g, ''),
+                10
+              )
+            : ''
 
-        
-        this.facade.record$.pipe(take(1)).subscribe(oldRecord => {
-          const updatedRecord: CatalogRecord = {
-            ...oldRecord,
-            title: issue.subject, 
-            abstract: issue.description || 'Description par défaut', 
-            overviews: [], 
-            keywords: keywords, 
-            kind: 'dataset',
-            resourceIdentifier: this.cardNumber,
-            resourceCreated: issue.created_on,
-            resourceUpdated: issue.updated_on,
-            recordUpdated: issue.updated_on,
-            licenses: [], 
-            lineage: '', 
-            contacts: [],
-            contactsForResource: [],
-            spatialExtents: [],
-            temporalExtents: [],
-            status: 'ongoing', 
-            topics: [],
-            legalConstraints: [],
-            securityConstraints: [],
-            otherConstraints: [],
-            ownerOrganization: {
-              name: issue.author.name || 'MyOrganization',
-              translations: {}
-            },
-            defaultLanguage: 'fre',
-            otherLanguages: [],
-            uniqueIdentifier: oldRecord?.uniqueIdentifier ?? 'temp-id',
-            onlineResources: [],
-          };
-  
-          this.facade.openRecord(updatedRecord, null);
-          this.facade.setCurrentPage(0);
-        });
-        
-       
-      }
-      else {
-        alert('Aucune donnée trouvée pour ce numéro de carte.');
-        return;
-      }
-    });
-    
+          this.facade.record$.pipe(take(1)).subscribe((oldRecord) => {
+            const updatedRecord: CatalogRecord = {
+              ...oldRecord,
+              title: issue.subject,
+              abstract: issue.description || 'Description par défaut',
+              overviews: [],
+              keywords: keywords,
+              kind: 'dataset',
+              resourceIdentifier: this.cardNumber,
+              resourceCreated: issue.created_on,
+              resourceUpdated: issue.updated_on,
+              recordUpdated: issue.updated_on,
+              licenses: [],
+              lineage: '',
+              contacts: [],
+              contactsForResource: [],
+              spatialExtents: [],
+              temporalExtents: [],
+              status: 'ongoing',
+              topics: [],
+              legalConstraints: [],
+              securityConstraints: [],
+              otherConstraints: [],
+              ownerOrganization: {
+                name: issue.author.name || 'MyOrganization',
+                translations: {},
+              },
+              defaultLanguage: 'fre',
+              otherLanguages: [],
+              uniqueIdentifier: oldRecord?.uniqueIdentifier ?? 'temp-id',
+              onlineResources: [],
+              resolutionScaleDenominator: echelle.toString(),
+            }
+
+            this.facade.openRecord(updatedRecord, null)
+            this.facade.setCurrentPage(0)
+          })
+        } else {
+          alert('Aucune donnée trouvée pour ce numéro de carte.')
+          return
+        }
+      })
   }
-
-
 }

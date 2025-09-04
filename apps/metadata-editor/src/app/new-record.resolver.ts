@@ -50,6 +50,7 @@ export class NewRecordResolver {
           onlineResources: [],
           spatialExtents: [],
           temporalExtents: [],
+          resolutionScaleDenominator: '',
         }
         return [catalogRecord, null, false]
       })

@@ -66,7 +66,8 @@ export function extractCharacterString(): ChainableFunction<
     fallback(
       findChildElement('gco:CharacterString', false),
       findChildElement('gmx:Anchor', false),
-      findChildElement('gmx:MimeFileType', false)
+      findChildElement('gmx:MimeFileType', false),
+      findChildElement('gco:Integer', false)
     ),
     readText()
   )
@@ -130,7 +131,10 @@ export function extractDateTime(): ChainableFunction<XmlElement, Date> {
 
 export function extractDecimal(): ChainableFunction<XmlElement, number> {
   return pipe(
-    findChildElement('gco:Decimal', false),
+    fallback(
+      findChildElement('gco:Decimal', false),
+      findChildElement('gco:Integer', false)
+    ),
     readText(),
     map((numberStr) => (numberStr ? Number(numberStr) : null))
   )
@@ -1192,6 +1196,20 @@ export function readResourceIdentifier(rootEl: XmlElement): string {
       'gmd:identifier',
       'gmd:MD_Identifier',
       'gmd:code'
+    ),
+    extractCharacterString()
+  )(rootEl)
+}
+export function readResolutionScaleDenominator(rootEl: XmlElement): string {
+  return pipe(
+    findIdentification(),
+    findNestedElement(
+      'gmd:spatialResolution',
+      'gmd:MD_Resolution',
+      'gmd:equivalentScale',
+      'gmd:MD_RepresentativeFraction',
+      'gmd:denominator',
+      'gco:Integer'
     ),
     extractCharacterString()
   )(rootEl)

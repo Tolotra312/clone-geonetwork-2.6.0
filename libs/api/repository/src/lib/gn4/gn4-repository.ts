@@ -410,6 +410,7 @@ export class Gn4Repository implements RecordsRepositoryInterface {
     referenceRecordSource?: string,
     publishToAll = true
   ): Observable<string> {
+    console.log('saveRecord', { record, referenceRecordSource })
     return this.platformService.getApiVersion().pipe(
       map((version) => {
         if (lt(version, minPublicationApiVersion)) {

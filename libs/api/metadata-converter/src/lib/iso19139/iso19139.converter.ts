@@ -49,6 +49,7 @@ import {
   readTitle,
   readUniqueIdentifier,
   readUpdateFrequency,
+  readResolutionScaleDenominator,
 } from './read-parts'
 import {
   writeAbstract,
@@ -79,6 +80,7 @@ import {
   writeTopics,
   writeUniqueIdentifier,
   writeUpdateFrequency,
+  writeResolutionScaleDenominator,
 } from './write-parts'
 
 export class Iso19139Converter extends BaseConverter<string> {
@@ -117,6 +119,7 @@ export class Iso19139Converter extends BaseConverter<string> {
     spatialExtents: readSpatialExtents,
     otherLanguages: readOtherLanguages,
     defaultLanguage: readDefaultLanguage,
+    resolutionScaleDenominator: readResolutionScaleDenominator,
     // TODO
     extras: () => undefined,
     landingPage: () => undefined,
@@ -158,6 +161,7 @@ export class Iso19139Converter extends BaseConverter<string> {
     spatialExtents: writeSpatialExtents,
     otherLanguages: writeLanguages,
     defaultLanguage: writeDefaultLanguage,
+    resolutionScaleDenominator: writeResolutionScaleDenominator,
     // TODO
     extras: () => undefined,
     landingPage: () => undefined,
@@ -242,6 +246,9 @@ export class Iso19139Converter extends BaseConverter<string> {
     const defaultLanguage = this.readers['defaultLanguage'](rootEl, tr)
     const resourceIdentifier = this.readers['resourceIdentifier'](rootEl, tr)
     const spatialExtents = this.readers['spatialExtents'](rootEl, tr)
+    const resolutionScaleDenominator = this.readers[
+      'resolutionScaleDenominator'
+    ](rootEl, tr)
 
     return {
       uniqueIdentifier,
@@ -270,6 +277,7 @@ export class Iso19139Converter extends BaseConverter<string> {
       spatialExtents,
       onlineResources,
       translations: tr,
+      resolutionScaleDenominator,
       ...(landingPage && { landingPage }),
     } as CatalogRecord
   }
@@ -390,6 +398,8 @@ export class Iso19139Converter extends BaseConverter<string> {
       this.writers['onlineResources'](record, rootEl)
     fieldChanged('resourceIdentifier') &&
       this.writers['resourceIdentifier'](record, rootEl)
+    fieldChanged('resolutionScaleDenominator') &&
+      this.writers['resolutionScaleDenominator'](record, rootEl)
 
     if (record.kind === 'dataset') {
       fieldChanged('status') && this.writers['status'](record, rootEl)

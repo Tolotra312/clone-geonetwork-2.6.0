@@ -66,6 +66,19 @@ export const RECORD_KEYWORDS_FIELD: EditorField = {
 // keeping track of the label to not lose existing translation
 marker('editor.record.form.field.keywords')
 
+export const RECORD_THEME_HDF_FIELD: EditorField = {
+  model: 'keywords',
+  formFieldConfig: {
+    labelKey: marker('Pas fonctionnel. Thématique Haut de France'),
+  },
+}
+export const RECORD_RESOLUTION_SCALE_DENOMINATOR_FIELD: EditorField = {
+  model: 'resolutionScaleDenominator',
+  formFieldConfig: {
+    labelKey: marker('Echelle'),
+  },
+}
+
 export const RECORD_RESOURCE_CREATED_FIELD: EditorField = {
   model: 'resourceCreated',
   formFieldConfig: {
@@ -236,6 +249,12 @@ export const CLASSIFICATION_SECTION: EditorSection = {
   hidden: false,
   fields: [RECORD_KEYWORDS_FIELD],
 }
+export const CUSTOM_SECTION: EditorSection = {
+  labelKey: marker('Section pour HDF'),
+  descriptionKey: marker('Section pour HDF - Concu spécialement pour vous'),
+  hidden: false,
+  fields: [RECORD_RESOLUTION_SCALE_DENOMINATOR_FIELD],
+}
 
 export const USE_AND_ACCESS_CONDITIONS_SECTION: EditorSection = {
   labelKey: marker('editor.record.form.section.useAndAccessConditions.label'),
@@ -274,6 +293,7 @@ export const DEFAULT_CONFIGURATION: EditorConfig = {
     {
       labelKey: marker('editor.record.form.page.description'),
       sections: [
+        CUSTOM_SECTION,
         TITLE_SECTION,
         CLASSIFICATION_SECTION,
         ABOUT_SECTION,

@@ -124,6 +124,15 @@ export const editorFieldSpatialExtentsFixture = () => ({
   },
 })
 
+export const editorFieldResolutionScaleDenominatorFixture = () => ({
+  model: 'resolutionScaleDenominator',
+  hidden: false,
+  formFieldConfig: {
+    labelKey: 'editor.record.form.field.resolutionScaleDenominator',
+  },
+  value: 'unknown',
+})
+
 export const editorFieldKeywordsFixture = () => ({
   model: 'keywords',
   hidden: false,
@@ -160,4 +169,5 @@ export const editorFieldsFixture = () => [
   editorFieldSpatialExtentsFixture(),
   editorFieldKeywordsFixture(),
   editorFieldUniqueIdentifierFixture(),
+  editorFieldResolutionScaleDenominatorFixture(),
 ]

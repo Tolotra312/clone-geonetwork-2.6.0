@@ -137,6 +137,7 @@ export interface BaseRecord {
   otherLanguages: Array<LanguageCode> // this should include all non-default languages present in the metadata, even if incompletely translated
 
   translations?: RecordTranslations
+  resolutionScaleDenominator?: string
 
   // to add: canonical url
   // to add: source catalog (??)
